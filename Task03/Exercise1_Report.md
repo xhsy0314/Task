@@ -26,5 +26,8 @@ make install
 afl-fuzz -i $HOME/fuzzing_xpdf/pdf_examples/ -o $HOME/fuzzing_xpdf/out/ -s 123 -- $HOME/fuzzing_xpdf/install/bin/pdftotext @@ $HOME/fuzzing_xpdf/output
 ```
 对于这条指令运行时会报错，提示不存在s这一参数，考虑到可能是AFL版本原因，我就将-s 123删去了。之后正常运行：<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/c4b42436-5da3-45ef-9ae4-efff5b676147)
+
+机器性能真的低，运行了快一个小时才找到第一个crash..<br>
 
 未完...
