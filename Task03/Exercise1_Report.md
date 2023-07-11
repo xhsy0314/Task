@@ -38,7 +38,12 @@ afl-fuzz -i $HOME/fuzzing_xpdf/pdf_examples/ -o $HOME/fuzzing_xpdf/out/ -s 123 -
 ![image](https://github.com/xhsy0314/Task/assets/84487619/735a4970-1df3-4c61-87df-a347ebf2ad4b)<br>
 
 **修复**<br>
-根据报错信息可知，可能存在内存泄漏，下载 Xpdf 4.02源码对比来看。观察获取的回溯，glibc报错，报错位置在malloc.c:3679。根据执行流信息，由分析可以看出调用过程是循环的，判断为无限循环漏洞；
-根据xpdf/Parse.cc 94行的makeStream调用找到漏洞位置。
+根据报错信息可知，可能存在内存泄漏。观察获取的回溯，发现glibc报错，报错位置在malloc.c:3679。根据执行流信息，由分析可以看出调用过程是循环的，判断为无限循环漏洞；
+根据xpdf/Parse.cc 94行的makeStream调用找到漏洞位置。<br>
+下载 Xpdf 4.02源码对比来看,发现在原先makeStream调用的位置添加了一个recursion变量，能够记录循环次数，循环超过一定次数就结束进程。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/96e135f7-5bba-42fc-8052-5b7cd26d2160)
 
-未完...
+
+总结
+---
+通过该实验，我能够通过复现CVE的方式熟悉AFL++的基本使用方法，中间利用gdb追踪crash路径的方法也应该熟练运用，同时涉及到的代码审计等方面还是值得后续学习的。首次进行这种实验需要学习的知识还有很多，对于做完的实验要温故知新，重要知识点应牢记。
