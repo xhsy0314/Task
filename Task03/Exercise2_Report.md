@@ -9,4 +9,4 @@ make
 make install
 ```
 
-寻找新的方法安装exif
+检查pkgconfig的安装
