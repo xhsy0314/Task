@@ -66,3 +66,19 @@ afl-fuzz -i $HOME/fuzzing_libexif/exif-samples-master/jpg/ -o $HOME/fuzzing_libe
 ![image](https://github.com/xhsy0314/Task/assets/84487619/f71d33d0-9542-493b-892c-0f260c3d6342)
 
 出现多次崩溃。
+
+
+Eclipse工具的应用
+--
+
+下载eclipse并解压，进行以下配置<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/ee3966be-2662-48a4-aa64-776b390dbd62)
+
+点击"Debug"启动调试功能，程序就会在主函数的开头停止。点击Run -> Resume，当检测到分段错误时，执行就会停止。<br>
+
+![image](https://github.com/xhsy0314/Task/assets/84487619/2c4ff96c-4709-4f11-9998-9b51312d6b6a)
+
+总结
+--
+
+在本实验中，学习了使用 afl-clang-lto 作为编译器来构建 libexif，并且明确了使用afl-clang-lto而不是afl-clang-fast的原因。另外，对模糊测试的步骤更加熟悉了。在上个实验中学习了用gdb调试工具来对crash进行追踪、回溯过程，对于本实验的crash会尝试用gdb进行分析。
