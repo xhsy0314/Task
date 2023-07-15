@@ -42,9 +42,10 @@ make install
 ```
 $HOME/fuzzing_tcpdump/install/sbin/tcpdump -h
 ```
-![image](https://github.com/xhsy0314/Task/assets/84487619/a1025488-15db-4575-a414-d091a6fab155)
+![image](https://github.com/xhsy0314/Task/assets/84487619/21f19143-1f70-4768-bbb7-6c78f37d4bda)
 
-在启用 ASAN 的情况下构建 tcpdump（和 libpcap）
+
+在启用 ASAN 的情况下构建 tcpdump（和 libpcap） 进度
 --
 
 ```
