@@ -62,13 +62,14 @@ AFL_USE_ASAN=1 make install
 模糊测试
 --
 
-错误记录：<br>
+
 
 ```
 afl-fuzz -m none -i /home/xhsy/fuzzing_tcpdump/tcpdump-tcpdump-4.9.2/tests/ -o /home/xhsy/fuzzing_tcpdump/out/ -- /home/xhsy/fuzzing_tcpdump/install/sbin/tcpdump @@
 ```
 
-![image](https://github.com/xhsy0314/Task/assets/84487619/a132123b-83cb-44b3-922e-05f4a565b98e)
+![c0d8d6e0d654bd93e69c36e7c975643](https://github.com/xhsy0314/Task/assets/84487619/946d8e33-a7f5-43f2-8467-c4f19c994b7b)
+
 
 
 未完.
