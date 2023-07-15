@@ -30,7 +30,19 @@ make install
 ```
 $HOME/fuzzing_libexif/install/bin/exif
 ```
-![image](https://github.com/xhsy0314/Task/assets/84487619/a3588ed0-35ef-46a4-9ca1-10d2fd1d1a76)
+![image](https://github.com/xhsy0314/Task/assets/84487619/bdd4590f-e9b3-4c57-99e7-2d88992d229c)
+
+获取exif样本
+--
+
+执行操作(举例)：
+
+```
+$HOME/fuzzing_libexif/install/bin/exif $HOME/fuzzing_libexif/exif-samples-master/jpg/Canon_40D_photoshop_import.jpg
+```
+
+![image](https://github.com/xhsy0314/Task/assets/84487619/fa6d7f05-1ede-4c0c-9d40-bd3063e32bcf)
+
 
  afl-clang-lto 作为编译器构建 libexif
  --
