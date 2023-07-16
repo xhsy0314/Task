@@ -45,7 +45,7 @@ $HOME/fuzzing_tcpdump/install/sbin/tcpdump -h
 ![image](https://github.com/xhsy0314/Task/assets/84487619/21f19143-1f70-4768-bbb7-6c78f37d4bda)
 
 
-在启用 ASAN 的情况下构建 tcpdump（和 libpcap） 进度
+在启用 ASAN 的情况下构建 tcpdump（和 libpcap） 
 --
 
 ```
@@ -71,7 +71,29 @@ afl-fuzz -m none -i /home/xhsy/fuzzing_tcpdump/tcpdump-tcpdump-4.9.2/tests/ -o /
 
 ![image](https://github.com/xhsy0314/Task/assets/84487619/48b77f2a-9d04-4317-ab3d-59692b6a526d)
 
+使用ASAN调试<br>
 
-未完.
+```
+$HOME/fuzzing_tcpdump/install/sbin/tcpdump -vvvvXX -ee -nn -r '/home/fuzz/fuzzing_tcpdump/out/default/crashes/id:000000,sig:06,src:009837,time:21830778,execs:8381174,op:havoc,rep:5' 
+```
+
+![image](https://github.com/xhsy0314/Task/assets/84487619/ba8841e8-e70a-44c2-8862-cbb49957e57d)<br>
+
+
+**==4123484==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60b000000154 at pc 0x0000005cee8f bp 0x7fffff49ec60 sp 0x7fffff49ec58**
+    pc 0x0000005cee8f bp 0x7fffff49ec60 sp 0x7ffff f49ec58上的地址0x60b000000154上的堆缓冲区溢出
+
+<br>
+
+
+修复
+--
+
+```
+https://github.com/the-tcpdump-group/tcpdump/commit/85078eeaf4bf8fcdc14a4e79b516f92b6ab520fc#diff-05f854a9033643de07f0d0059bc5b98f3b314eeb1e2499ea1057e925e6501ae8L381
+```
+
+官方已做出修复，对比可以查看改动。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/396b362b-13ee-4331-80e4-d24c9b342c8f)
 
 
