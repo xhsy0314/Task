@@ -69,8 +69,7 @@ AFL_USE_ASAN=1 make install
 afl-fuzz -m none -i /home/xhsy/fuzzing_tcpdump/tcpdump-tcpdump-4.9.2/tests/ -o /home/xhsy/fuzzing_tcpdump/out/ -- /home/xhsy/fuzzing_tcpdump/install/sbin/tcpdump @@
 ```
 
-![c0d8d6e0d654bd93e69c36e7c975643](https://github.com/xhsy0314/Task/assets/84487619/946d8e33-a7f5-43f2-8467-c4f19c994b7b)
-
+![image](https://github.com/xhsy0314/Task/assets/84487619/48b77f2a-9d04-4317-ab3d-59692b6a526d)
 
 
 未完.
