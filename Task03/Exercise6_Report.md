@@ -58,3 +58,8 @@ ASAN_OPTIONS=detect_leaks=0,abort_on_error=1,symbolize=0 afl-fuzz -i './afl_in' 
 ![image](https://github.com/xhsy0314/Task/assets/84487619/df2e5f66-e23c-40a6-8a09-64f80655aeda)<br>
 
 如图运行了约40h也没跑出crash，需要检查是不是准备工作没做好导致配置等方面出现问题...
+
+总结
+--
+
+在本实验中我尝试了启用AFL持久模式的方法，通过修改 GIMP 源代码来使用这种模式，该模式在模糊测试中具有更快的速度和更好的稳健性。
