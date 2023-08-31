@@ -34,3 +34,12 @@ jz somewhere
 如果ecx为零，设置ZF零标志为1，jz跳转。
 
         JBE命令时，如果此时的CF标志位或者ZF标志位为1，跳转，其他不跳转
+        SHR   ;（右移）指令使目的操作数逻辑右移一位，最高位用 0 填充。
+        SAR   ;（算术右移）指令将目的操作数进行算术右移：
+        lea (%rax,%rsi,1),%ecx   ;作用是ecx=rax+rsi*1
+
+        cmp %edi,%ecx 
+        jle 400ff2      ;若ecx≤edi，则跳转到400ff2
+
+        cmp %edi,%ecx
+        jge 401007     ；若ecx≥edi，则跳转到401007
