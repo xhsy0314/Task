@@ -43,3 +43,20 @@ jz somewhere
 
         cmp %edi,%ecx
         jge 401007     ；若ecx≥edi，则跳转到401007
+
+
+Phase_5
+-
+
+		xor eax,eax
+eax异或eax，相同为0，并把结果存放到eax，简单说该语句就是想eax寄存器清零。<br>
+
+**windows x64寄存器命名规则**
+前缀R
+表示64位寄存器。例如RAX。
+前缀E
+表示32位寄存器。例如EAX
+后缀L
+表示寄存器的低8位
+后缀H
+表示寄存器的9~16位
