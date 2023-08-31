@@ -84,3 +84,42 @@ Ph0666TY1131Xh333311k13XjiV11Hc1ZXYf1TqIHf9kDqW02DqX0D1Hu3M2G0Z2o4H0u0P160Z0g7O0
 shellcode=""
 io.sendline(shellcode)
 ```
+
+3.system函数参数非/bin/sh (64位)
+-
+
+```
+__int64 dofunc()
+{
+  __int64 buf; // [rsp+8h] [rbp-8h] BYREF
+
+  buf = 0LL;
+  puts("input:");
+  read(0, &buf, 0x100uLL);
+  return 0LL;
+}
+```
+
+buf栈溢出，动态调试计算能够输入的长度:
+
+```
+gdb file
+b main
+r
+n    ---步过，直到执行到某个函数
+s    ---进入该函数
+n    ---直到回车后提示输入数据
+随便输入一些数据
+stack 24    ---查看栈情况
+```
+
+![image](https://github.com/xhsy0314/Task/assets/84487619/87c3d24b-8fa0-4954-8c7b-2d581f2feb08)<br>
+
+rbp-rsi之间就是buf中能够输入数据的长度，也是填充数据的长度，这里是0x10-0x8=8.<br>
+然后还需要填充8个字节的数据，因为rbp占8个字节。也就是一共填充16个垃圾数据。<br>
+
+易忽略的点：**64位程序中的system函数的栈对齐问题**
+
+1、将system函数地址+1，此处的+1，即是把地址+1，也可以理解为
+
+
