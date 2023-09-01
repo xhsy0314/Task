@@ -103,4 +103,45 @@
         . .表示a文件夹。
         . ./d 表示a文件夹下的d文件。
 
+3.php伪协议
+-
 
+
+php支持的伪协议：
+```
+1 file:// — 访问本地文件系统
+2 http:// — 访问 HTTP(s) 网址
+3 ftp:// — 访问 FTP(s) URLs
+4 php:// — 访问各个输入/输出流（I/O streams）
+5 zlib:// — 压缩流
+6 data:// — 数据（RFC 2397）
+7 glob:// — 查找匹配的文件路径模式
+8 phar:// — PHP 归档
+9 ssh2:// — Secure Shell 2
+10 rar:// — RAR
+11 ogg:// — 音频流
+12 expect:// — 处理交互式的流
+```
+
+1.php://filter:可以获取指定文件源码。当它与包含函数结合时，php://filter流会被当作php文件执行。所以我们一般对其进行编码，让其不执行。从而导致 任意文件读取。<br>
+
+```
+php://filter/read=convert.base64-encode/resource=index.php
+php://filter/resource=index.php
+```
+利用filter协议读文件±，将index.php通过base64编码后进行输出。这样做的好处就是如果不进行编码，文件包含后就不会有输出结果，而是当做php文件执行了，而通过编码后则可以读取文件源码。
+
+而使用的convert.base64-encode，就是一种过滤器。
+
+<br>
+
+**例题**
+<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/d63f1fcd-2401-48d9-9baf-632075c45976)
+<br>
+
+看到这样的格式和题目 include 也很容易想起文件包含和PHP伪协议。
+所以，直接用伪协议读取flag.php的源码构造 payload
+```
+ ?file=php://filter/read=convert.base64-encode/resource=flag.php
+```
