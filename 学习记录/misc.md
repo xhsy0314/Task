@@ -26,3 +26,11 @@
 按伪加密处理，把两个地方的全局方式位标记都改为00 00，接着保存，这样处理后文件就属于未加密了<br>
 
 ![image](https://github.com/xhsy0314/Task/assets/84487619/4a320ef8-af4c-45a6-abc7-b25745fd3d6f)
+
+
+2.流量嗅探
+-
+```
+http.request.method==POST
+```
+追踪http流量
