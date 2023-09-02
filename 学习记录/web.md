@@ -20,7 +20,7 @@
 ```
 ![image](https://github.com/xhsy0314/Task/assets/84487619/67694d40-feb4-411a-8b83-9fc80e74ea8a)
 
-**sql**：
+**sql**：(例题：BUUCTF LoveSQL)
 <br>
 1.**查看注入类型**：输入1'报错You have an error in your SQL syntax;……，判断是字符注入
 <br>
