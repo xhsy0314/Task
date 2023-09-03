@@ -54,6 +54,11 @@
 ' union select 1,2,group_concat(username,password) from geek.l0ve1ysq1;# 
 ```
 得到flag{aec2d854-1855-4168-be6f-3033aaa96c1a}
+<br>
+其他知识点：
+        有时会过滤掉“or”“union”等等关键字，可以用到 **双写过滤** 来绕过
+        例如：oorr uniunionon
+
 
 2.php
 -
