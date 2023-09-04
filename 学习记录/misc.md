@@ -56,3 +56,10 @@ python .\firepwd.py .\logins.json
       选中单元格-> 右键设置单元格格式
 ![image](https://github.com/xhsy0314/Task/assets/84487619/4347be67-5045-4d13-b3b3-c418e5fefe6c)
 <br>
+看样子像是二维码一样的排列，将值为1的单元格涂黑。
+      选中单元格，点击条件格式，突出显示单元格规则，等于，自定义格式为黑色。
+
+最后搜索“列宽”功能，调整宽度使二维码呈正方形<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/2907e75a-1bf8-4639-8f08-59c74b3782d5)
+
+直接扫好像扫不出来，属于**汉信码**，打开中国编码网下载对应app，扫出flag
