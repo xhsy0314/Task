@@ -34,3 +34,15 @@
 http.request.method==POST
 ```
 追踪http流量
+
+3.取证
+-
+
+工具：firepwd<br>
+将logins.json放到firepwd.py目录下，
+```
+python .\firepwd.py .\logins.json
+```
+得到flag<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/86aa6251-93cd-4449-90a8-787f6cdac1fa)
+
