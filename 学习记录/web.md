@@ -493,3 +493,43 @@ select * from `admin` where password=''or'1'
 select * from `admin` where password=''or'6<trash>'           --->  True
 ```
 成功构成SQL注入，我们在本题直接输入ffifdyop即可进入下一关.
+
+7.tornado render
+   -
+
+        tornado render是python中的一个渲染函数，也就是一种模板，通过调用的参数不同，生成不同的网页，如果用户对render内容可控，不仅可以注入XSS代码，而且还可以通过{{}}进行传递变量和执行简单的表达式。 
+                
+        在tornado模板中，存在一些可以访问的快速对象,这里用到的是handler.settings，handler 指向RequestHandler，而RequestHandler.settings又指向self.application.settings，所以handler.settings就指向RequestHandler.application.settings了，这里面就是我们的一些环境变量 
+
+**例题**：（BUUCTF easy_tornado）
+
+![image](https://github.com/xhsy0314/Task/assets/84487619/31586ce2-59cc-4abe-97ae-fc7b6419381c)
+<br>
+进入题目，点进三个链接依次是<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/fd072fc8-ecc0-4fa1-9c1a-0f73de450099)
+![image](https://github.com/xhsy0314/Task/assets/84487619/85613989-096f-4ab5-8a4a-3801c56d7feb)
+![image](https://github.com/xhsy0314/Task/assets/84487619/6759d143-4880-46a6-b139-909a3801fc3e)
+<br>
+
+得知考察render，并且需要知道cookie_secret。<br>
+直接访问/fllllllllllllag会进入这个页面，<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/6fa1a1a4-84b4-419a-8409-71eceeebc333)
+<br>
+注入点就是该页面.
+根据上述知识点，构造payload：
+```
+error?msg={{handler.settings}}
+```
+得到了cookie_secret：<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/be66d3b0-1a1f-4722-8d21-387a9c509a95)
+<br>
+/fllllllllllllag md5加密后为：3bf9f6cf685a6dd8defadabfb41a03a1<br>
+这里注意hint中md5(cookie_secret+md5(filename))，意思是需要将5dc04ea1-83f7-4568-ada4-5ea6244274c63bf9f6cf685a6dd8defadabfb41a03a1经过md5加密后再上传
+<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/706d5f32-86c5-414c-a4bf-27f505df5b8c)
+<br>
+最终payload:
+```
+/file?filename=/fllllllllllllag&filehash=471494c842a1ea48fdadef21f4e1b16a
+```
+得到flag。
