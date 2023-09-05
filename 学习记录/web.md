@@ -303,6 +303,7 @@ ls执行后第一行就是flag.php
 查看源码<br>
 ![image](https://github.com/xhsy0314/Task/assets/84487619/7d9ea08a-13b4-4142-b0c2-9a917640e8fc)
 <br>
+发现存在一个calc.php，进入这个文件看看。
 
 4.堆叠注入
 -
