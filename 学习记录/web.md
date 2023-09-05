@@ -294,6 +294,15 @@ ls执行后第一行就是flag.php
         ?ip=127.0.0.1;cat 'ls'
         ?ip=127.0.0.1;cat $(ls)
 
+**例题（BUUCTF Easy Calc）**:<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/0da53229-6813-4b40-a7dd-a6ae429b515d)
+<br>
+进入题目，随便输入试试<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/b97f6466-32a9-4aa8-96eb-a06e2c7f76a8)
+<br>
+查看源码<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/7d9ea08a-13b4-4142-b0c2-9a917640e8fc)
+<br>
 
 4.堆叠注入
 -
