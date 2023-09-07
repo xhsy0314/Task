@@ -205,3 +205,33 @@ payload =b "a" * 23 +p64(0x401187)
 payload =b "a" * 15 +p64(0x401186)
 #这应该是最寻常的做法
 ```
+5.栈溢出变形——覆盖某个变量的值（BUUCTF ciscn_2019_n_1）
+--
+
+题目中func函数的反编译代码：<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/352eb273-7e46-45cd-84f0-9fd86c520615)
+
+<br>
+分析可知需要利用v1变量来构成栈溢出，来使v2变量的值变成11.28125，从而调用system("cat /flag")查看flag<br>
+点进v1,可以看到v1v2两个变量之间的距离为（0x30-0x4=44），也就是44个字节，所以需要将这44个字节填充起来，然后再将11.28125传入进去<br>
+
+这里一开始不知道怎么传入11.28125，原来是需要找到这个数字的地址，<br>
+我们观察func函数二进制指令，<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/0f2dbf8e-18c3-4aa5-8eb4-acbb2c52fa57)
+<br>
+发现有两个比较指令，那么这个cs:dword_4007F4很有可能就是11.28125所在的地址。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/488c2ad9-dbd1-43eb-88fd-85ed564e0313)<br>
+
+点进去看看，果然找到了<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/0b089f92-533a-470f-8384-0aa35236f1ca)
+<br>
+所以11.28125的地址就为0x41348000。
+
+构造payload：
+
+```
+payload=b'A'*44+p64(0x41348000)
+```
+
+
+
