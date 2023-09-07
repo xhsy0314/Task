@@ -63,3 +63,27 @@ python .\firepwd.py .\logins.json
 ![image](https://github.com/xhsy0314/Task/assets/84487619/2907e75a-1bf8-4639-8f08-59c74b3782d5)
 
 直接扫好像扫不出来，属于**汉信码**，打开中国编码网下载对应app，扫出flag
+
+5.vmdk解压+brainfuck+ook编码（例题 BUUCTF 面具下的flag）
+--
+
+题目给出一个图片，用binwalk分解得到一个flag.vmdk文件，用kali下的7z命令解压该文件
+```
+7z x flag.vmdk -o./
+```
+
+解压得到四个文件夹<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/8ef6e61d-0c84-4e4d-a1c9-0c05f99abb83)
+<br>
+
+key_part_one打开是这样一段编码<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/05888a92-bf33-4837-983e-40feb1bc4a7b)<br>
+搜索后知道是brainfuck，解码得到第一段flag。附上网址：
+<https://www.splitbrain.org/services/ook><br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/324b3f12-4131-415e-b6ce-77cac0ae7f01)
+<br>
+
+第二部分是一段ook编码<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/1e257d8d-2794-425a-b7ad-412bbb91cba2)
+<br>
+同样通过上述网址解码，得到flag
