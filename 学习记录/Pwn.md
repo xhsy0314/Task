@@ -233,5 +233,16 @@ payload =b "a" * 15 +p64(0x401186)
 payload=b'A'*44+p64(0x41348000)
 ```
 
+5.32位溢出（buuctf pwn1_sctf_2016）
+--
 
-
+题目给出的程序为32位，开启nx（堆栈不可执行）保护，就是说我们没法往堆栈上写东西.<br>
+存在这么几个关键函数<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/fe03892f-74aa-4d23-9c87-d54d81fec7de)
+<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/a55ceefc-6399-4a65-b59e-077b124950e4)
+<br>
+其中， fgets(s, 32, edata);那一行是我们的输入点，依靠这里来构成溢出。点进s这个变量观察到他有0x3c（60个）个字节的位置，而fgets只往里输入了32个字节，无法构成溢出。再往下看，replace((std::string *)v3);  这个函数将一个字节的“I”替换成三个字节的“you”，思路来了，我们输入20字节的 “I” ，经过第19行的replace函数后会变成60字节的 “you” ，这样就可以进行溢出了，之后覆盖ebp，覆盖返回地址为输出flag的函数地址，就可以完成利用。
+```
+payload=b'I'*20+b'AAAA'+p32(getflag)
+```
