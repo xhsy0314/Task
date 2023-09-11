@@ -27,6 +27,7 @@ print(libnum.n2s(int(m)))
 
 <br>
 有时上面这种代码运行后会出现\x形式的字符串，如果出现这样的问题则试试下面的：
+
 ```
 from Crypto.Util.number import bytes_to_long, long_to_bytes, getPrime
 p = 
@@ -34,7 +35,6 @@ q =
 c = 
 e = 65537
 d = pow(e, -1, (p-1)*(q-1))
-
 m = long_to_bytes(pow(ct, d, p*q))
 print(m)
 ```
