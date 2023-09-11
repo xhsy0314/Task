@@ -1,4 +1,4 @@
-RSA
+1.RSA
 -
 
 1.已知n，c，e
@@ -37,4 +37,31 @@ e = 65537
 d = pow(e, -1, (p-1)*(q-1))
 m = long_to_bytes(pow(ct, d, p*q))
 print(m)
+```
+
+ 2 . pycryptodome 库破解哈希（PCTF2023 Breakfast club）
+-
+题目给出了一个txt：<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/bc0cf6b5-6665-4cbf-8731-ce9f0d29280c)
+<br>
+
+在这里使用pycryptodome对每一行进行破解：
+```
+from Crypto.Hash import SHA, SHA1, MD2, MD4, MD5, SHA224, SHA256, SHA384, SHA512, SHA3_224, SHA3_256, SHA3_384, SHA3_512, TupleHash128, TupleHash256, BLAKE2s, BLAKE2b
+algos = [SHA, SHA1, MD2, MD4, MD5, SHA224, SHA256, SHA384, SHA512, SHA3_224, SHA3_256, SHA3_384, SHA3_512, TupleHash128, TupleHash256, BLAKE2s, BLAKE2b]
+import string
+with open("D:/bluewhale-oj/BreakfastPasswords.txt", "r") as f:
+    hashes = f.readlines()
+
+flag = ""
+for i in range(len(hashes)):
+    algo, hash = hashes[i].split(" ")
+    algo = algos[i]
+    for char in string.printable:
+        test_hash = algo.new()
+        test_hash.update(char.encode())
+        if test_hash.hexdigest() in hash:
+            flag += char
+
+print(flag)
 ```
