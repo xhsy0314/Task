@@ -247,12 +247,15 @@ payload=b'A'*44+p64(0x41348000)
 ```
 payload=b'I'*20+b'AAAA'+p32(getflag)
 ```
+***********************
 
 **例2：jarvisoj_level2**
 <br>
 这道题是比较普通的栈溢出，但是第一遍构造payload之后没打通，看了别人wp之后意识到用system的地址覆盖返回地址之后，**需要跟随便一个地址**，这个地址是system函数执行的地址。
 <br>
 具体看一下:<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/0dd8095e-d137-49fb-aafa-bbbe51d04042)
+
 <br>
 很明显的栈溢出，system和binsh也都有，那么直接构造payload：
 ```
