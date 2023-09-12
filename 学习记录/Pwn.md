@@ -233,9 +233,10 @@ payload =b "a" * 15 +p64(0x401186)
 payload=b'A'*44+p64(0x41348000)
 ```
 
-5.32位溢出（buuctf pwn1_sctf_2016）
+5.32位溢出
 --
 
+**例1：buuctf pwn1_sctf_2016**
 题目给出的程序为32位，开启nx（堆栈不可执行）保护，就是说我们没法往堆栈上写东西.<br>
 存在这么几个关键函数<br>
 ![image](https://github.com/xhsy0314/Task/assets/84487619/fe03892f-74aa-4d23-9c87-d54d81fec7de)
@@ -245,6 +246,18 @@ payload=b'A'*44+p64(0x41348000)
 其中， fgets(s, 32, edata);那一行是我们的输入点，依靠这里来构成溢出。点进s这个变量观察到他有0x3c（60个）个字节的位置，而fgets只往里输入了32个字节，无法构成溢出。再往下看，replace((std::string *)v3);  这个函数将一个字节的“I”替换成三个字节的“you”，思路来了，我们输入20字节的 “I” ，经过第19行的replace函数后会变成60字节的 “you” ，这样就可以进行溢出了，之后覆盖ebp，覆盖返回地址为输出flag的函数地址，就可以完成利用。
 ```
 payload=b'I'*20+b'AAAA'+p32(getflag)
+```
+
+**例2：jarvisoj_level2**
+<br>
+这道题是比较普通的栈溢出，但是第一遍构造payload之后没打通，看了别人wp之后意识到用system的地址覆盖返回地址之后，**需要跟随便一个地址**，这个地址是system函数执行的地址。
+<br>
+具体看一下:<br>
+<br>
+很明显的栈溢出，system和binsh也都有，那么直接构造payload：
+```
+payload = b'A'*0x88+b'B'*0x4+p32(0x08048320)+p32(0)+p32(0x0804A024)
+#0x08048320是system_plt,0x0804A024是/bin/sh地址，p32(0)注意不要漏掉因为是system的执行地址，实际上也可以写成任意一个地址，比如#p32(0xdeadbeef),p32(0x12345678)...
 ```
 
 6.格式化字符串的三种解法（buuctf PWN5）
