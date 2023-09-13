@@ -86,7 +86,7 @@ io.sendline(shellcode)
 ```
 
 3.system函数参数非/bin/sh (64位)
--
+==
 
 ```
 __int64 dofunc()
@@ -171,7 +171,7 @@ io.interactive()
 ```
 
 4.一道简单栈溢出的三种做法（BUUCTF rip）
---
+==
 main函数反编译后很简单，容易观察到存在栈溢出<br>
 
 ![image](https://github.com/xhsy0314/Task/assets/84487619/ac28750b-44b4-49d6-abad-370be872f243)
@@ -206,7 +206,7 @@ payload =b "a" * 15 +p64(0x401186)
 #这应该是最寻常的做法
 ```
 5.栈溢出变形——覆盖某个变量的值（BUUCTF ciscn_2019_n_1）
---
+==
 
 题目中func函数的反编译代码：<br>
 ![image](https://github.com/xhsy0314/Task/assets/84487619/352eb273-7e46-45cd-84f0-9fd86c520615)
@@ -233,8 +233,8 @@ payload =b "a" * 15 +p64(0x401186)
 payload=b'A'*44+p64(0x41348000)
 ```
 
-5.32位溢出
---
+6.32位栈溢出
+==
 
 **例1：buuctf pwn1_sctf_2016**
 题目给出的程序为32位，开启nx（堆栈不可执行）保护，就是说我们没法往堆栈上写东西.<br>
@@ -263,8 +263,8 @@ payload = b'A'*0x88+b'B'*0x4+p32(0x08048320)+p32(0)+p32(0x0804A024)
 #0x08048320是system_plt,0x0804A024是/bin/sh地址，p32(0)注意不要漏掉因为是system的执行地址，实际上也可以写成任意一个地址，比如#p32(0xdeadbeef),p32(0x12345678)...
 ```
 
-6.格式化字符串的三种解法（buuctf PWN5）
---
+7.格式化字符串的三种解法（buuctf PWN5）
+==
 
 查看文件，开启了Canary，NX，部分RELRO。<br>
 main函数：
