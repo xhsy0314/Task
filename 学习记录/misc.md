@@ -129,3 +129,21 @@ grep -E "^[(][0-9]{3}[)][[:space:]][0-9]{3}[-][0-9]{4,6}$" -n rockyou.txt
       [-]：接着是一个短横线
       [0-9]{4,6}：最后是4到6个数字
       -n选项告诉grep命令输出匹配行的行号。
+
+8.outguess加密
+--
+
+**加密：**
+```
+outguess -k "my secret key" -d hidden.txt demo.jpg out.jpg
+```
+加密之后，demo.jpg会覆盖out.jpg,
+
+hidden.txt中的内容是要隐藏的东西
+
+**解密：**
+```
+outguess -k "my secret key" -r out.jpg hidden.txt
+```
+解密之后，解密内容放在hidden.txt中
+
