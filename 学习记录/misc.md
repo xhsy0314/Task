@@ -147,3 +147,7 @@ outguess -k "my secret key" -r out.jpg hidden.txt
 ```
 解密之后，解密内容放在hidden.txt中
 
+9.盲文解密
+--
+
+附上链接：<https://www.qqxiuzi.cn/bianma/wenbenjiami.php?s=mangwen>
