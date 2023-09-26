@@ -198,3 +198,16 @@ for i in res:
 	print(flag[0],end="")
 
 ```
+12.十六进制转换成rar
+--
+
+```
+import binascii
+
+hex_data='txt文件中16进制数据'
+out=open('flag.rar','wb')
+out.write(binascii.unhexlify(hex_data))
+out.close()
+
+
+```
